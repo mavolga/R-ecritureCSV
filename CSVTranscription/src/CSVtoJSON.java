@@ -52,9 +52,6 @@ public class CSVtoJSON {
 		    		}
 		    		while ((nextLine = reader.readNext()) != null){
 		    				it = vector.iterator();
-		    				/*if(it.hasNext()){
-		    					it.next();
-		    				} */
 		    	    		fw.write("{ \n");
 		                   for(String valeur:nextLine){
 		                	   if(valeur.length() != 0){
@@ -62,12 +59,8 @@ public class CSVtoJSON {
 		                		   element = it.next();}
 		                		   fw.write("\"" + element + ":\"" + valeur+ "\"");
 		                		   if(it.hasNext() == true){
-		                			   fw.write(", \n");
-		    	                	   //it.next();
-		    	                		   
+		                			   fw.write(", \n");	   
 		                		   }
-		                		   /*if(it.hasNext())
-		                		   it.next();*/
 		                	   }else{
 		                		   if(it.hasNext())
 		                		   it.next();
