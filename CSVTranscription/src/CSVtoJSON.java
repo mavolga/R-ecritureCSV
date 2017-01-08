@@ -35,10 +35,10 @@ public class CSVtoJSON {
 		String id_commande;
 		String date_commande;*/
 		
-		
-		
-			public static void main (String[] args) throws Exception{	 
-			     CSVReader reader = new CSVReader(new FileReader("Fichier/Generation1.csv"));
+			
+			public static void convertCSVtoJSON(String nom_fic)  throws Exception{
+				String filePath = "Fichier/" + nom_fic + ".csv";
+				CSVReader reader = new CSVReader(new FileReader(filePath));
 			     try{
 		    		String [] nextLine;
 		    		Vector<String> vector = new Vector<String>(); 
@@ -57,13 +57,13 @@ public class CSVtoJSON {
 		    				} */
 		    	    		fw.write("{ \n");
 		                   for(String valeur:nextLine){
-		                	   if(valeur != null){
+		                	   if(valeur.length() != 0){
 		                		   if(it.hasNext()){
 		                		   element = it.next();}
 		                		   fw.write("\"" + element + ":\"" + valeur+ "\"");
 		                		   if(it.hasNext() == true){
 		                			   fw.write(", \n");
-		    	                	   it.next();
+		    	                	   //it.next();
 		    	                		   
 		                		   }
 		                		   /*if(it.hasNext())
@@ -73,18 +73,25 @@ public class CSVtoJSON {
 		                		   it.next();
 		                	   }
 		                   }
-		                   fw.write("}");
-		                   if(reader.readNext() != null){
-		                	   fw.write(", \n");
-		                   }
+		                   fw.write("}, \n"); 
+         
 		           }
 		            reader.close();
 		            fw.close();
-		            System.out.println("good");
+		            System.out.println("JSON file generated");
 			     }catch (IOException e){
 			    	 e.printStackTrace();
 			     }
-		     }
-		
-	
+				
+			}
+			
+			public static void main (String[] args) throws Exception{	 
+				   String file_name = "Generation1";
+				   convertCSVtoJSON(file_name);
+						 
+			}
+			
 }
+
+
+
