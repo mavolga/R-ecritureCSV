@@ -44,16 +44,22 @@ public class CSVtoJSON {
 		    		Vector<String> vector = new Vector<String>(); 
 		    		Iterator<String > it;
 		    		Object element = new Object();
+		    		//Creation fichier Json
 		    		File jsonfile = new File("FichierJson.json");
 		    		FileWriter fw = new FileWriter(jsonfile);
+		    		//Lecture premiere ligne du CSV
 		    		nextLine = reader.readNext();
+		    		//Sauvegarde de la ligne dans un vecteur (attributs)
 		    		for(String valeur:nextLine){
 		    			vector.add(valeur);
 		    		}
+		    		//Tant que la lecture n'est pas finie, lire la ligne
 		    		while ((nextLine = reader.readNext()) != null){
 		    				it = vector.iterator();
 		    	    		fw.write("{ \n");
+		    	    		//pour chaque champs de la ligne
 		                   for(String valeur:nextLine){
+		                	   //si la valeur n'est pas nulle l'écrire dans le fichier 
 		                	   if(valeur.length() != 0){
 		                		   if(it.hasNext()){
 		                		   element = it.next();}
@@ -61,12 +67,12 @@ public class CSVtoJSON {
 		                		   if(it.hasNext() == true){
 		                			   fw.write(", \n");	   
 		                		   }
-		                	   }else{
+		                	   }else{ //sinon avancer uniquement le pointeur d'attribut
 		                		   if(it.hasNext())
 		                		   it.next();
 		                	   }
 		                   }
-		                   fw.write("}, \n"); 
+		                   fw.write("}, \n");
          
 		           }
 		            reader.close();

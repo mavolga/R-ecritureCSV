@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Vector;
 import com.opencsv.*;
-import com.sun.org.apache.xpath.internal.Arg;
+
 
 public class CSVtoSQL {
 
@@ -21,6 +21,10 @@ public class CSVtoSQL {
 		  }
 	}
 	
+	public CSVtoSQL(){
+		vect_attributs = new Vector<String>();
+	}
+	
 	public int getNb_attributs(){
 		return vect_attributs.size();
 	}
@@ -34,14 +38,14 @@ public class CSVtoSQL {
 	
 
 		
-	
 		public static void main (String[] args) throws Exception{	 
 			   String file_name = "Generation1";
+			   //mise en place des tables et de leurs attributs
 			   CSVtoSQL client_t = new CSVtoSQL("Client", new String[] {"id_client","id_ville", "prenom_client", "nom_client",
 					   "email_client","gender_client", "telephone_client", "iban_client", "abonnement_client"});
 			   CSVtoSQL fournisseur_t = new CSVtoSQL("Fournisseur", new String[] {"id_fournisseur","id_ville", "nom_fournisseur", "slogan_fournisseur",
 					   "devise_fournisseur","email_fournisseur", "iban_fournisseur", "telephone_fournisseur"});
-			   CSVtoSQL produit_t = new CSVtoSQL("Produit", new String[] {"id_produit","id_fournisseur","prix_produit", "label_produit"});
+			   CSVtoSQL produit_t = new CSVtoSQL("Produit", new String[] {"id_produit","id_fournisseur","couleur_produit","prix_produit", "label_produit"});
 			   CSVtoSQL localisation_t = new CSVtoSQL("Localisation", new String[] {"id_ville","nom_ville", "pays"});
 			   CSVtoSQL commande_t = new CSVtoSQL("Commande", new String[] {"id_commande", "id_produit", "id_client","date_commande"});
 			   
@@ -56,60 +60,89 @@ public class CSVtoSQL {
 		}
 
 		private static void convertCSVtoSQL(String nom_fic, Vector<CSVtoSQL> v_table) throws Exception{
-			// TODO Auto-generated method stub
+			//récuperation du CSV
 			String filePath = "Fichier/" + nom_fic + ".csv";
 			CSVReader reader = new CSVReader(new FileReader(filePath));
 		     try{
 	    		String [] nextLine;
 	    		int nb_attribut;
-	    		//String id_four,id_prod, id_cli;
+	    		String id_four,id_prod, id_cli;
 	    		Vector<String> vector_attributs = new Vector<String>(); 
-	    		Vector<String> vector_valeurs = new Vector<String>(); 
-	    		//Iterator<String > it_attribut;
+	    		Vector<String> vector_valeurs = new Vector<String>();
 	    		Iterator<CSVtoSQL> it_table;
 	    		Iterator<String > it_valeur;
 	    		Object element = new Object();
-	    		Object t_name = new Object();
+	    		CSVtoSQL table = new CSVtoSQL();
+	    		//Creation du fichier SQL
 	    		File sqlfile = new File("FichierSQL.sql");
 	    		FileWriter fw = new FileWriter(sqlfile);
+	    		//lecture de la 1ere ligne
 	    		nextLine = reader.readNext();
+	    		//Sauvegarde de la ligne dans un vecteur (attributs)
 	    		for(String valeur:nextLine){
 	    			vector_attributs.add(valeur);
 	    		}
+	    		//tant que la lecture n'est pas finie
 	    		while ((nextLine = reader.readNext()) != null){
-	    				//it_attribut = vector_attributs.iterator();
 	    				it_table = v_table.iterator();
-	    				it_valeur = vector_valeurs.iterator();
+	    				 vector_valeurs.clear();
+	    				//récuperer les champs de la ligne dans un vecteur
 	                   for(String valeur:nextLine){
 	                	   vector_valeurs.add(valeur);
 	                   }
 	                   it_valeur = vector_valeurs.iterator();
+	                   //sauvegarde de l'id_client, id_founisseur et id_produit
+	                   id_four = vector_valeurs.get(9);
+	                   id_cli = vector_valeurs.get(0);
+	                   id_prod = vector_valeurs.get(17);
+	                   //pour chaque table
 	                   for(int i=0; i<v_table.size(); i++){
 	                	   if(it_table.hasNext()){
-	                		   //t_name = it_table.next();
-	                		   element = it_table.next().getNom_table();
-	                		  // element = t_name.
-	                	   }
+	                		   table = it_table.next();
+	                		   //récupérer le nom de la table
+	                		   element = table.getNom_table();
+	                	   	                	   
+	                		   fw.write("insert into " + element + " (");
 	                	   
-	                	   fw.write("insert into " + element + " (");
-	                	   if(it_table.hasNext()){
-	                	   nb_attribut = it_table.next().getNb_attributs(); 
-	                	   for(int j=0; j<nb_attribut; j++){
-	                		   if(it_table.hasNext()){
-	                		   element = it_table.next().getVector().get(j);}
-	                		   fw.write("'"+element + "', ");
+		                	   nb_attribut = table.getNb_attributs(); 
+		                	   for(int j=0; j<nb_attribut; j++){
+		                		   //récuperer les noms des attributs
+		                		   element = table.getVector().get(j);
+		                		   fw.write(""+element);
+		                		   if(j!= (nb_attribut-1)){
+	                				   fw.write(", ");
+	                			   }
 	                		   
 	                	   }
-	                	   fw.write(element + ") values ( ");
+	                	   fw.write(") values (");
 	                	   for(int k =0; k<nb_attribut;k++){
 	                		   if(it_valeur.hasNext()){
-	                		   element = it_valeur.next();}
-	                		   fw.write(element + ", ");
+	                			 //Si on rempli le 2eme champ de la table produit alors rajouter le champ id_fournisseur
+	    	                	   if((table.getNom_table() == "Produit") && (k==1)){
+	    	                		   fw.write("'"+id_four + "'");
+	    	                	   }else
+	    	                	 //Si on rempli le 2eme champ de la table commande alors rajouter le champ id_produit
+	   	                	    if((table.getNom_table() == "Commande") && (k==1)){
+	   	                		   fw.write("'"+ id_prod+ "'");
+	   	                	    	}else //Si on rempli le 3eme champ de la table commande alors rajouter le champ id_produit
+	   	                	    		if((table.getNom_table() == "Commande") && (k==2)){
+	   	                	    		fw.write("'"+ id_cli+ "'");
+	   	                	    	}else{ 
+	                			   //Sinon recuperer les valeurs des attributs 'normaux' (ie non clé-étrangere)
+	                			   element = it_valeur.next();
+	                			   fw.write("'"+element + "'");
+	   	                	    	}
+	                			   if(k!= (nb_attribut-1)){
+	                				   fw.write(",");
+	                			   }
+	                		   }
 	                	   }
+	                	   
+	                	 
+	                	   fw.write(")\n"); 
+	                	  
 	                	   }
-	                	
-	                   
-	                   fw.write(" \n"); 
+	                   fw.write(" \n\n"); 
      
 	                   }
 	    		}
