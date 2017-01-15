@@ -109,13 +109,13 @@ public class CSVtoNEO {
 	                		   //récupérer le nom de la table
 	                		   element = table.getNom_table();
 	                	   	   if(element == "Client"){
-	                	   		fw.write("\"create ("+ id_cli + ":" + element + "{");
+	                	   		fw.write("create (cl_"+ id_cli + ":" + element + "{");
 	                	   	   }else if(element == "Fournisseur"){
-	                	   		fw.write("\"create ("+ id_four + ":" + element + "{");
+	                	   		fw.write("create (f_"+ id_four + ":" + element + "{");
 	                	   	   }else if(element == "Produit"){
-	                	   		   fw.write("\"create ("+ id_prod + ":" + element + "{");
+	                	   		   fw.write("create (p_"+ id_prod + ":" + element + "{");
 	                	   	   }else{
-	                	   		 fw.write("\"create ("+ id_commande + ":" + element + "{");
+	                	   		 fw.write("create (co_"+ id_commande + ":" + element + "{");
 	                	   	   }
 	                	   
 		                	   nb_attribut = table.getNb_attributs(); 
@@ -124,12 +124,13 @@ public class CSVtoNEO {
 		                		   if(it_valeur.hasNext()){
 		                			   element = it_valeur.next();
 		                			   if(element.length() != 0){
+		                				   if((j!= 0)){
+	                				   			fw.write(", ");
+	                				   		}
 		                				   if(it_attribut.hasNext()){
 		                					   att = it_attribut.next();
 		                				   		fw.write(""+att+ ":'" + element + "'");
-		                				   		if(j!= (nb_attribut-1)){
-		                				   			fw.write(", ");
-		                				   		}
+		                				   		
 		                				   }
 		                			   }else if(it_attribut.hasNext()){
 				                			   att = it_attribut.next();
@@ -138,7 +139,7 @@ public class CSVtoNEO {
 		                				  
 		                		   }
 	                	   }
-	                	   fw.write("})\"");
+	                	   fw.write("})");
 	                	   fw.write("\n\n");
 	                	 
 	                	  
@@ -146,9 +147,9 @@ public class CSVtoNEO {
 	                 
 	                   }
 	                   fw.write("\n");
-	                   fw.write("\"create ("+ id_commande+")-[:REALISE_PAR]->(" + id_cli+"), ");
-	                   fw.write("(id_commande)-[:CONCERNE]->(" + id_prod+"), "); 
-	                   fw.write("(id_prod)-[:DELIVRE_PAR]->(" + id_four+")\""); 
+	                   fw.write("create (co_"+ id_commande+")-[:REALISE_PAR]->(cl_" + id_cli+"), ");
+	                   fw.write("(co_" +id_commande+")-[:CONCERNE]->(p_" + id_prod+"), "); 
+	                   fw.write("(p"+id_prod+")-[:DELIVRE_PAR]->(f_" + id_four+")"); 
 	                   fw.write(" \n\n"); 
 	    		}
 	            reader.close();
