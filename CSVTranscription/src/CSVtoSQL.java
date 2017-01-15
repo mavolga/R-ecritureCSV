@@ -39,21 +39,21 @@ public class CSVtoSQL {
 
 		
 		public static void main (String[] args) throws Exception{	 
-			   String file_name = "Generation1";
+			   String file_name = "Generation2";
 			   //mise en place des tables et de leurs attributs
 			   CSVtoSQL client_t = new CSVtoSQL("Client", new String[] {"id_client","id_ville", "prenom_client", "nom_client",
 					   "email_client","gender_client", "telephone_client", "iban_client", "abonnement_client"});
 			   CSVtoSQL fournisseur_t = new CSVtoSQL("Fournisseur", new String[] {"id_fournisseur","id_ville", "nom_fournisseur", "slogan_fournisseur",
 					   "devise_fournisseur","email_fournisseur", "iban_fournisseur", "telephone_fournisseur"});
 			   CSVtoSQL produit_t = new CSVtoSQL("Produit", new String[] {"id_produit","id_fournisseur","couleur_produit","prix_produit", "label_produit"});
-			   CSVtoSQL localisation_t = new CSVtoSQL("Localisation", new String[] {"id_ville","nom_ville", "pays"});
+			   //CSVtoSQL localisation_t = new CSVtoSQL("Localisation", new String[] {"id_ville","nom_ville", "pays"});
 			   CSVtoSQL commande_t = new CSVtoSQL("Commande", new String[] {"id_commande", "id_produit", "id_client","date_commande"});
 			   
 			   Vector<CSVtoSQL> vect_table = new Vector<CSVtoSQL>();
 			   vect_table.add(client_t);
 			   vect_table.add(fournisseur_t);
 			   vect_table.add(produit_t);
-			   vect_table.add(localisation_t);
+			   //vect_table.add(localisation_t);
 			   vect_table.add(commande_t);
 			   convertCSVtoSQL(file_name, vect_table);
 					 

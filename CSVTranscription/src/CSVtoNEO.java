@@ -48,9 +48,9 @@ public class CSVtoNEO {
 					   "email_client","gender_client", "telephone_client", "iban_client", "abonnement_client"});
 			   CSVtoSQL fournisseur_t = new CSVtoSQL("Fournisseur", new String[] {"id_fournisseur","id_ville", "nom_fournisseur", "slogan_fournisseur",
 					   "devise_fournisseur","email_fournisseur", "iban_fournisseur", "telephone_fournisseur"});
-			   CSVtoSQL produit_t = new CSVtoSQL("Produit", new String[] {"id_produit","id_fournisseur","couleur_produit","prix_produit", "label_produit"});
+			   CSVtoSQL produit_t = new CSVtoSQL("Produit", new String[] {"id_produit","couleur_produit","prix_produit", "label_produit"});
 			   //CSVtoSQL localisation_t = new CSVtoSQL("Localisation", new String[] {"id_ville","nom_ville", "pays"});
-			   CSVtoSQL commande_t = new CSVtoSQL("Commande", new String[] {"id_commande", "id_produit", "id_client","date_commande"});
+			   CSVtoSQL commande_t = new CSVtoSQL("Commande", new String[] {"id_commande","date_commande"});
 			   
 			   Vector<CSVtoSQL> vect_table = new Vector<CSVtoSQL>();
 			   vect_table.add(client_t);
@@ -75,7 +75,7 @@ public class CSVtoNEO {
 	    		Iterator<CSVtoSQL> it_table;
 	    		Iterator<String > it_valeur;
 	    		Iterator<String > it_attribut;
-	    		Object element = new Object();
+	    		String element = new String();
 	    		String att = new String();
 	    		CSVtoSQL table = new CSVtoSQL();
 	    		//Creation du fichier SQL
@@ -101,7 +101,7 @@ public class CSVtoNEO {
 	                   id_four = vector_valeurs.get(9);
 	                   id_cli = vector_valeurs.get(0);
 	                   id_prod = vector_valeurs.get(17);
-	                   id_commande = vector_valeurs.get(22);
+	                   id_commande = vector_valeurs.get(21);
 	                   //pour chaque table
 	                   for(int i=0; i<v_table.size(); i++){
 	                	   if(it_table.hasNext()){
@@ -112,8 +112,10 @@ public class CSVtoNEO {
 	                	   		fw.write("\"create ("+ id_cli + ":" + element + "{");
 	                	   	   }else if(element == "Fournisseur"){
 	                	   		fw.write("\"create ("+ id_four + ":" + element + "{");
-	                	   	   }else {
+	                	   	   }else if(element == "Produit"){
 	                	   		   fw.write("\"create ("+ id_prod + ":" + element + "{");
+	                	   	   }else{
+	                	   		 fw.write("\"create ("+ id_commande + ":" + element + "{");
 	                	   	   }
 	                	   
 		                	   nb_attribut = table.getNb_attributs(); 
@@ -121,7 +123,7 @@ public class CSVtoNEO {
 		                		   //récuperer les noms des attributs
 		                		   if(it_valeur.hasNext()){
 		                			   element = it_valeur.next();
-		                			   if(element != ""){
+		                			   if(element.length() != 0){
 		                				   if(it_attribut.hasNext()){
 		                					   att = it_attribut.next();
 		                				   		fw.write(""+att+ ":'" + element + "'");
@@ -129,10 +131,9 @@ public class CSVtoNEO {
 		                				   			fw.write(", ");
 		                				   		}
 		                				   }
-		                			   }else{
-		                				   if(it_valeur.hasNext()){
-				                			   element = it_valeur.next();
-		                				   }
+		                			   }else if(it_attribut.hasNext()){
+				                			   att = it_attribut.next();
+		                				   
 		                			   }
 		                				  
 		                		   }
@@ -145,8 +146,8 @@ public class CSVtoNEO {
 	                 
 	                   }
 	                   fw.write("\n");
-	                   fw.write("\"create ("+ id_commande+")-[:REALISE_PAR]->(" + id_cli+")\" ,");
-	                   fw.write("(id_commande)-[:CONCERNE]->(" + id_prod+") ,"); 
+	                   fw.write("\"create ("+ id_commande+")-[:REALISE_PAR]->(" + id_cli+"), ");
+	                   fw.write("(id_commande)-[:CONCERNE]->(" + id_prod+"), "); 
 	                   fw.write("(id_prod)-[:DELIVRE_PAR]->(" + id_four+")\""); 
 	                   fw.write(" \n\n"); 
 	    		}
