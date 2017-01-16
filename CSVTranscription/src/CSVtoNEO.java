@@ -44,9 +44,9 @@ public class CSVtoNEO {
 		public static void main (String[] args) throws Exception{	 
 			   String file_name = "Generation2";
 			   //mise en place des tables et de leurs attributs
-			   CSVtoSQL client_t = new CSVtoSQL("Client", new String[] {"id_client","id_ville", "prenom_client", "nom_client",
+			   CSVtoSQL client_t = new CSVtoSQL("Client", new String[] {"id_client","ville_client", "prenom_client", "nom_client",
 					   "email_client","gender_client", "telephone_client", "iban_client", "abonnement_client"});
-			   CSVtoSQL fournisseur_t = new CSVtoSQL("Fournisseur", new String[] {"id_fournisseur","id_ville", "nom_fournisseur", "slogan_fournisseur",
+			   CSVtoSQL fournisseur_t = new CSVtoSQL("Fournisseur", new String[] {"id_fournisseur","ville_fournisseur", "nom_fournisseur", "slogan_fournisseur",
 					   "devise_fournisseur","email_fournisseur", "iban_fournisseur", "telephone_fournisseur"});
 			   CSVtoSQL produit_t = new CSVtoSQL("Produit", new String[] {"id_produit","couleur_produit","prix_produit", "label_produit"});
 			   //CSVtoSQL localisation_t = new CSVtoSQL("Localisation", new String[] {"id_ville","nom_ville", "pays"});
@@ -149,7 +149,7 @@ public class CSVtoNEO {
 	                   fw.write("\n");
 	                   fw.write("create (co_"+ id_commande+")-[:REALISE_PAR]->(cl_" + id_cli+"), ");
 	                   fw.write("(co_" +id_commande+")-[:CONCERNE]->(p_" + id_prod+"), "); 
-	                   fw.write("(p"+id_prod+")-[:DELIVRE_PAR]->(f_" + id_four+")"); 
+	                   fw.write("(p_"+id_prod+")-[:DELIVRE_PAR]->(f_" + id_four+")"); 
 	                   fw.write(" \n\n"); 
 	    		}
 	            reader.close();

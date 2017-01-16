@@ -85,7 +85,7 @@ public class CSVtoJSON {
 			}
 			
 			public static void main (String[] args) throws Exception{	 
-				   String file_name = "Generation2";
+				   String file_name = "Generation2projet";
 				   convertCSVtoJSON(file_name);
 						 
 			}
