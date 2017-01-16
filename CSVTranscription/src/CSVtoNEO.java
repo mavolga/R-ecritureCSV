@@ -42,7 +42,7 @@ public class CSVtoNEO {
 
 		
 		public static void main (String[] args) throws Exception{	 
-			   String file_name = "Generation2";
+			   String file_name = "Generation2projet";
 			   //mise en place des tables et de leurs attributs
 			   CSVtoSQL client_t = new CSVtoSQL("Client", new String[] {"id_client","ville_client", "prenom_client", "nom_client",
 					   "email_client","gender_client", "telephone_client", "iban_client", "abonnement_client"});
