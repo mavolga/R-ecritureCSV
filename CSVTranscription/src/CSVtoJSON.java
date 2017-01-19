@@ -56,16 +56,16 @@ public class CSVtoJSON {
 		    		//Tant que la lecture n'est pas finie, lire la ligne
 		    		while ((nextLine = reader.readNext()) != null){
 		    				it = vector.iterator();
-		    	    		fw.write("{ \n");
+		    	    		fw.write("{ ");
 		    	    		//pour chaque champs de la ligne
 		                   for(String valeur:nextLine){
 		                	   //si la valeur n'est pas nulle l'écrire dans le fichier 
 		                	   if(valeur.length() != 0){
 		                		   if(it.hasNext()){
 		                		   element = it.next();}
-		                		   fw.write("\"" + element + ":\"" + valeur+ "\"");
+		                		   fw.write("\"" + element + "\":\"" + valeur+ "\"");
 		                		   if(it.hasNext() == true){
-		                			   fw.write(", \n");	   
+		                			   fw.write(", ");	   
 		                		   }
 		                	   }else{ //sinon avancer uniquement le pointeur d'attribut
 		                		   if(it.hasNext())
